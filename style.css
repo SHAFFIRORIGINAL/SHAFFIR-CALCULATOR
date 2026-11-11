@@ -1,0 +1,841 @@
+/* ==========================================================================
+   Eclispe Calculator - Stylesheet
+   Modern, responsive scientific calculator with Night Vision themes.
+   ========================================================================== */
+
+/* --- CSS Variables & Theme Palettes --- */
+:root {
+  /* Default: Light Mode (Day) */
+  --bg-page: #f8fafc;
+  --bg-page-subtle: #edf2f7;
+  --text-page: #0f172a;
+  --text-muted: #64748b;
+  --header-border: rgba(0, 0, 0, 0.08);
+
+  /* Calculator Chassis (Stays Black in both modes as specified) */
+  --calc-body-bg: #090a0f;
+  --calc-body-border: #1e2230;
+  --calc-inner-bg: #0f1118;
+  --calc-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.07);
+
+  /* Display Screen Colors */
+  --display-bg: #050608;
+  --display-border: #1c202d;
+  --display-expr: #94a3b8;
+  --display-result: #f8fafc;
+  --display-accent: #38bdf8;
+
+  /* Button Colors: All keys are BLUE, Delete is ORANGE */
+  --btn-blue-bg: #1d4ed8;
+  --btn-blue-gradient: linear-gradient(180deg, #2563eb 0%, #1e40af 100%);
+  --btn-blue-hover: #3b82f6;
+  --btn-blue-active: #1d4ed8;
+  --btn-blue-text: #ffffff;
+  --btn-blue-border: #3b82f6;
+  --btn-blue-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+  /* Dedicated Orange Delete Key */
+  --btn-orange-bg: #ea580c;
+  --btn-orange-gradient: linear-gradient(180deg, #f97316 0%, #c2410c 100%);
+  --btn-orange-hover: #fb923c;
+  --btn-orange-active: #9a3412;
+  --btn-orange-text: #ffffff;
+  --btn-orange-border: #fdba74;
+  --btn-orange-shadow: 0 3px 6px rgba(234, 88, 12, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+
+  /* Theme Switcher Button */
+  --theme-btn-bg: #ffffff;
+  --theme-btn-border: #cbd5e1;
+  --theme-btn-text: #1e293b;
+  --theme-btn-hover: #f1f5f9;
+
+  /* Transitions */
+  --theme-transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* --- Dark Mode (Night Vision) Theme --- */
+[data-theme="dark"] {
+  --bg-page: #0a0b10;
+  --bg-page-subtle: #12141c;
+  --text-page: #f1f5f9;
+  --text-muted: #94a3b8;
+  --header-border: rgba(255, 255, 255, 0.08);
+
+  --theme-btn-bg: #1e2230;
+  --theme-btn-border: #333a4d;
+  --theme-btn-text: #f8fafc;
+  --theme-btn-hover: #293042;
+  --calc-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 20px rgba(37, 99, 235, 0.15);
+}
+
+/* Base Reset & Box Sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--bg-page);
+  color: var(--text-page);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: var(--theme-transition);
+  padding: 0.75rem;
+}
+
+/* --- App Header & Branding --- */
+.app-header {
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto 0.75rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--header-border);
+  transition: var(--theme-transition);
+}
+
+.brand-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.brand-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  background: linear-gradient(135deg, #2563eb, #38bdf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-tagline {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+/* --- Theme Toggle Button (Light / Dark / System) --- */
+.theme-control {
+  display: flex;
+  align-items: center;
+}
+
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--theme-btn-bg);
+  color: var(--theme-btn-text);
+  border: 1px solid var(--theme-btn-border);
+  border-radius: 9999px;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: all 0.25s ease;
+  user-select: none;
+}
+
+.theme-toggle-btn:hover {
+  background: var(--theme-btn-hover);
+  transform: translateY(-1px);
+}
+
+.theme-toggle-btn:active {
+  transform: translateY(0);
+}
+
+.icon-slot {
+  width: 18px;
+  height: 18px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-icon {
+  width: 18px;
+  height: 18px;
+  display: none;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Dynamic Active Icon based on state */
+[data-theme-setting="light"] .icon-sun,
+[data-theme-setting="dark"] .icon-moon,
+[data-theme-setting="system"] .icon-system {
+  display: block;
+}
+
+.theme-mode-label {
+  text-transform: capitalize;
+}
+
+/* --- Calculator Wrapper --- */
+.calculator-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.25rem 0;
+}
+
+/* The Black Calculator Body */
+.calculator-card {
+  width: 100%;
+  max-width: 820px;
+  background-color: var(--calc-body-bg);
+  border: 1px solid var(--calc-body-border);
+  border-radius: 24px;
+  padding: 1.25rem;
+  box-shadow: var(--calc-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle futuristic top neon accent line */
+.calculator-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #2563eb, #38bdf8, transparent);
+}
+
+/* --- Display Section --- */
+.display-container {
+  background: var(--display-bg);
+  border: 1px solid var(--display-border);
+  border-radius: 16px;
+  padding: 0.85rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 110px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.display-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.35rem;
+}
+
+.display-controls-right {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+/* History Toggle Button in Display Bar */
+.history-badge-btn {
+  background: rgba(37, 99, 235, 0.18);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #cbd5e1;
+  border-radius: 6px;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.history-badge-btn:hover {
+  background: rgba(37, 99, 235, 0.35);
+  border-color: #38bdf8;
+  color: #ffffff;
+}
+
+.history-icon {
+  width: 13px;
+  height: 13px;
+}
+
+.history-count-badge {
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 0.65rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: 9999px;
+  font-weight: 800;
+  min-width: 16px;
+  text-align: center;
+}
+
+/* DEG / RAD interactive badge */
+.angle-badge {
+  background: rgba(37, 99, 235, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #94a3b8;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.angle-badge:hover {
+  background: rgba(37, 99, 235, 0.3);
+  border-color: #38bdf8;
+}
+
+.angle-badge span.active {
+  color: #38bdf8;
+  font-weight: 800;
+  text-shadow: 0 0 6px rgba(56, 189, 248, 0.5);
+}
+
+.unit-sep {
+  opacity: 0.4;
+  margin: 0 2px;
+}
+
+.status-indicator {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #475569;
+  text-transform: uppercase;
+}
+
+.status-indicator.error {
+  color: #f87171;
+}
+
+/* Expression & Result Lines */
+.display-expression {
+  font-family: "JetBrains Mono", "SF Mono", Consolas, monospace;
+  font-size: 1.05rem;
+  color: var(--display-expr);
+  min-height: 1.5rem;
+  text-align: right;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  user-select: all;
+}
+
+.display-expression::-webkit-scrollbar {
+  display: none;
+}
+
+.display-result {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, monospace;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--display-result);
+  text-align: right;
+  overflow-x: auto;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  scrollbar-width: none;
+  user-select: all;
+  transition: font-size 0.15s ease;
+}
+
+.display-result::-webkit-scrollbar {
+  display: none;
+}
+
+.display-result.small-font {
+  font-size: 1.5rem;
+}
+
+/* ==========================================================================
+   CALCULATION HISTORY DRAWER
+   ========================================================================== */
+.history-drawer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(9, 10, 15, 0.97);
+  backdrop-filter: blur(14px);
+  border-radius: 24px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  transform: translateY(-102%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.8);
+}
+
+.history-drawer.open {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #1e2433;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.history-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #38bdf8;
+}
+
+.history-title-group .history-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.history-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #f8fafc;
+  letter-spacing: -0.01em;
+}
+
+.history-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.history-btn-clear {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.history-btn-clear:hover {
+  background: rgba(239, 68, 68, 0.3);
+  border-color: #ef4444;
+  color: #ffffff;
+}
+
+.history-btn-close {
+  background: #1e2230;
+  border: 1px solid #333a4d;
+  color: #f8fafc;
+  font-size: 1.35rem;
+  line-height: 1;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.history-btn-close:hover {
+  background: #333a4d;
+  color: #38bdf8;
+}
+
+.history-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding-right: 0.35rem;
+  scrollbar-width: thin;
+  scrollbar-color: #2563eb #12141c;
+}
+
+.history-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.history-list::-webkit-scrollbar-track {
+  background: #12141c;
+  border-radius: 4px;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+  background: #2563eb;
+  border-radius: 4px;
+}
+
+.history-item {
+  background: #10131d;
+  border: 1px solid #1d2334;
+  border-radius: 12px;
+  padding: 0.65rem 0.85rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  transition: all 0.15s ease;
+  text-align: right;
+  position: relative;
+}
+
+.history-item:hover {
+  background: #181d2e;
+  border-color: #38bdf8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.history-item-expr {
+  font-family: "JetBrains Mono", Consolas, monospace;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-item-res {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #38bdf8;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-empty {
+  margin: auto;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.95rem;
+  padding: 2.5rem 1rem;
+}
+
+.history-footer {
+  border-top: 1px solid #1e2433;
+  padding-top: 0.5rem;
+  text-align: center;
+  font-size: 0.72rem;
+  color: #64748b;
+  margin-top: 0.5rem;
+}
+
+/* --- Mobile Keypad Tabs Navigation --- */
+.keypad-tabs-nav {
+  display: none; /* Desktop default: all keys visible simultaneously */
+  justify-content: center;
+  gap: 0.35rem;
+  background: #0f1118;
+  padding: 0.25rem;
+  border-radius: 12px;
+  border: 1px solid #1f2433;
+}
+
+.tab-button {
+  flex: 1;
+  background: transparent;
+  color: #94a3b8;
+  border: none;
+  border-radius: 8px;
+  padding: 0.45rem 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 38px;
+}
+
+.tab-button.active {
+  background: #1e3a8a;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* --- Keypad Layout --- */
+.keypad-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.panel-section {
+  display: grid;
+  gap: 0.5rem;
+}
+
+/* Scientific Panel: 5 columns */
+.scientific-panel {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+/* Basic Panel: 5 columns (matches layout seamlessly) */
+.basic-panel {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+/* Special Button Spans */
+.btn-ac {
+  grid-column: span 1;
+}
+
+.btn-equals {
+  grid-column: span 4;
+  font-size: 1.25rem;
+  font-weight: 800;
+  background: linear-gradient(180deg, #1d4ed8 0%, #172554 100%) !important;
+}
+
+/* ==========================================================================
+   BUTTON STYLES & CONTRAST
+   - All calculator keys are BLUE
+   - Main Delete key is ORANGE
+   - High text contrast with readable white typography
+   ========================================================================== */
+
+.calc-btn {
+  appearance: none;
+  border: none;
+  outline: none;
+  min-height: 48px; /* Guaranteed >= 44px for accessibility */
+  padding: 0.4rem 0.2rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.1s ease, filter 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Blue Keys (All calculator keys) */
+.btn-blue {
+  background: var(--btn-blue-gradient);
+  color: var(--btn-blue-text);
+  box-shadow: var(--btn-blue-shadow);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.btn-blue:hover {
+  filter: brightness(1.12);
+  transform: translateY(-1px);
+}
+
+.btn-blue:active {
+  transform: translateY(1px) scale(0.97);
+  filter: brightness(0.92);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Numeric Keys: slightly brighter blue tone for effortless scanning */
+.btn-num {
+  font-size: 1.15rem;
+  font-weight: 800;
+  background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%);
+}
+
+/* Operator Keys */
+.btn-op {
+  font-size: 1.15rem;
+  font-weight: 800;
+  background: linear-gradient(180deg, #2563eb 0%, #1e3a8a 100%);
+}
+
+/* Active 2nd function button indicator */
+.btn-second.active {
+  background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%);
+  border-color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+}
+
+/* ORANGE DELETE KEY: The ONLY non-blue key on the calculator */
+.btn-orange {
+  background: var(--btn-orange-gradient) !important;
+  color: var(--btn-orange-text) !important;
+  box-shadow: var(--btn-orange-shadow) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  font-weight: 800;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.btn-orange:hover {
+  filter: brightness(1.15) !important;
+  transform: translateY(-1px);
+}
+
+.btn-orange:active {
+  transform: translateY(1px) scale(0.97) !important;
+  filter: brightness(0.92) !important;
+}
+
+/* Keyboard Navigation Focus Indicator */
+.calc-btn:focus-visible,
+.theme-toggle-btn:focus-visible,
+.angle-badge:focus-visible,
+.tab-button:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+
+/* --- Footer & Keyboard Shortcuts Hint --- */
+.calculator-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 6px #38bdf8;
+}
+
+.tip-text {
+  font-size: 0.72rem;
+  color: #64748b;
+  text-align: center;
+}
+
+.tip-text strong {
+  color: #94a3b8;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (Desktops, Tablets & Mobile Phones)
+   ========================================================================== */
+
+/* Medium and Large Screens (>= 740px) */
+@media (min-width: 740px) {
+  .keypad-layout {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+  }
+}
+
+/* Small Screens / Mobile (< 740px) */
+@media (max-width: 739px) {
+  body {
+    padding: 0.4rem;
+  }
+
+  .app-header {
+    margin-bottom: 0.5rem;
+    padding: 0.35rem 0.5rem;
+  }
+
+  .brand-title {
+    font-size: 1.25rem;
+  }
+
+  .brand-tagline {
+    font-size: 0.68rem;
+  }
+
+  .calculator-card {
+    border-radius: 18px;
+    padding: 0.85rem;
+    gap: 0.75rem;
+  }
+
+  .display-container {
+    padding: 0.65rem 0.85rem;
+    min-height: 95px;
+  }
+
+  .display-result {
+    font-size: 1.9rem;
+  }
+
+  /* Show navigation tabs for comfortable mobile tapping */
+  .keypad-tabs-nav {
+    display: flex;
+  }
+
+  .keypad-layout {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  /* Responsive visibility based on active tab view */
+  .keypad-layout[data-view="basic"] .scientific-panel {
+    display: none;
+  }
+
+  .keypad-layout[data-view="sci"] .basic-panel {
+    display: none;
+  }
+
+  .keypad-layout[data-view="both"] .scientific-panel,
+  .keypad-layout[data-view="both"] .basic-panel {
+    display: grid;
+  }
+
+  .calc-btn {
+    min-height: 45px;
+    font-size: 0.9rem;
+    border-radius: 10px;
+  }
+
+  .btn-num {
+    font-size: 1.1rem;
+  }
+}
+
+/* Very Small / Narrow Phones (< 380px) */
+@media (max-width: 380px) {
+  .calculator-card {
+    padding: 0.65rem;
+    border-radius: 14px;
+  }
+
+  .calc-btn {
+    min-height: 44px; /* Ensure 44px tap target is strictly respected */
+    font-size: 0.82rem;
+    padding: 0.2rem;
+  }
+
+  .btn-num {
+    font-size: 1rem;
+  }
+
+  .scientific-panel, .basic-panel {
+    gap: 0.35rem;
+  }
+}
